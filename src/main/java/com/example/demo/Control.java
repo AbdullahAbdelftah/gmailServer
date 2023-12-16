@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -43,15 +44,11 @@ public class Control {
     }
 
     public ArrayList<UserData> getUsersData() {
-        try {
-            String currentDir = System.getProperty("user.dir");
-            System.out.println("Current Working Directory: " + currentDir);
-
-            File file = new File(JSON_FILE_PATH);
-            if (file.exists()) {
-                return objectMapper.readValue(file, new TypeReference<ArrayList<UserData>>() {});
+        try (InputStream inputStream = getClass().getResourceAsStream("/usersData.json")) {
+            if (inputStream != null) {
+                return objectMapper.readValue(inputStream, new TypeReference<ArrayList<UserData>>() {});
             } else {
-                System.err.println("File not found: " + file.getAbsolutePath());
+                System.err.println("File not found in the classpath");
                 return null;
             }
         } catch (IOException e) {
@@ -59,6 +56,7 @@ public class Control {
             return null;
         }
     }
+
 
 
     public void writeUsersData(ArrayList<UserData> usersData) {
