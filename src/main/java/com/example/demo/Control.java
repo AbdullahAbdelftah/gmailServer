@@ -13,7 +13,7 @@ import java.util.Calendar;
 @Service
 public class Control {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     private static final String JSON_FILE_NAME = "usersData.json";
     private static final String JSON_FILE_PATH = JSON_FILE_NAME;
 
@@ -44,6 +44,9 @@ public class Control {
 
     public ArrayList<UserData> getUsersData() {
         try {
+            String currentDir = System.getProperty("user.dir");
+            System.out.println("Current Working Directory: " + currentDir);
+
             File file = new File(JSON_FILE_PATH);
             if (file.exists()) {
                 return objectMapper.readValue(file, new TypeReference<ArrayList<UserData>>() {});
@@ -56,6 +59,7 @@ public class Control {
             return null;
         }
     }
+
 
     public void writeUsersData(ArrayList<UserData> usersData) {
         try {
