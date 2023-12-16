@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -57,11 +55,9 @@ public class Control {
         }
     }
 
-
-
     public void writeUsersData(ArrayList<UserData> usersData) {
-        try {
-            objectMapper.writeValue(new File(JSON_FILE_PATH), usersData);
+        try (OutputStream outputStream = new FileOutputStream(new File(JSON_FILE_PATH))) {
+            objectMapper.writeValue(outputStream, usersData);
         } catch (IOException e) {
             e.printStackTrace();
         }
