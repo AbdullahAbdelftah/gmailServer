@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,8 +15,8 @@ import java.util.Calendar;
 public class Control {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final String JSON_FILE_NAME = "usersData.json";
-    private static final String JSON_FILE_PATH = "/usersData.json";
+    @Value("${json.file.path}")
+    private String jsonFilePath;
 
     public ArrayList<UserData> usersData;
 
@@ -45,13 +46,8 @@ public class Control {
     public ArrayList<UserData> getUsersData() {
         try {
             System.out.println("read");
-            InputStream inputStream = getClass().getResourceAsStream(JSON_FILE_PATH);
-            if (inputStream != null) {
-                return objectMapper.readValue(inputStream, new TypeReference<ArrayList<UserData>>() {});
-            } else {
-                System.err.println("File not found in the classpath");
-                return null;
-            }
+            InputStream inputStream = new FileInputStream(jsonFilePath);
+            return objectMapper.readValue(inputStream, new TypeReference<ArrayList<UserData>>() {});
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -62,9 +58,8 @@ public class Control {
         System.out.println("write started");
         try {
             System.out.println(usersData);
-            // Note: This will write the file back to the classpath
-            objectMapper.writeValue(new File(getClass().getResource(JSON_FILE_PATH).toURI()), usersData);
-        } catch (IOException | URISyntaxException e) {
+            objectMapper.writeValue(new File(jsonFilePath), usersData);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
