@@ -42,20 +42,18 @@ public class Control {
     }
 
     public ArrayList<UserData> getUsersData() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/usersData.json")) {
-            if (inputStream != null) {
-                return objectMapper.readValue(inputStream, new TypeReference<ArrayList<UserData>>() {});
-            } else {
-                System.err.println("File not found in the classpath");
-                return null;
-            }
+        try (InputStream inputStream = new FileInputStream(new File(JSON_FILE_PATH))) {
+            return objectMapper.readValue(inputStream, new TypeReference<ArrayList<UserData>>() {});
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + JSON_FILE_PATH);
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     public void writeUsersData(ArrayList<UserData> usersData) {
+        System.out.println("d5lna write");
         try (OutputStream outputStream = new FileOutputStream(new File(JSON_FILE_PATH))) {
             objectMapper.writeValue(outputStream, usersData);
         } catch (IOException e) {
