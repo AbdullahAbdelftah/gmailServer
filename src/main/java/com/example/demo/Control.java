@@ -45,11 +45,11 @@ public class Control {
     public ArrayList<UserData> getUsersData() {
         try {
             System.out.println("read");
-            InputStream inputStream = getClass().getResourceAsStream(JSON_FILE_PATH);
-            if (inputStream != null) {
-                return objectMapper.readValue(inputStream, new TypeReference<ArrayList<UserData>>() {});
+            File file = new File(JSON_FILE_NAME);
+            if (file.exists()) {
+                return objectMapper.readValue(file, new TypeReference<ArrayList<UserData>>() {});
             } else {
-                System.err.println("File not found in the classpath");
+                System.err.println("File not found in the root of the project");
                 return null;
             }
         } catch (IOException e) {
@@ -62,9 +62,10 @@ public class Control {
         System.out.println("write started");
         try {
             System.out.println(usersData);
-            // Note: This will write the file back to the classpath
-            objectMapper.writeValue(new File(getClass().getResource(JSON_FILE_PATH).toURI()), usersData);
-        } catch (IOException | URISyntaxException e) {
+            File file = new File(JSON_FILE_NAME);
+            // Note: This will write the file to the root of your project
+            objectMapper.writeValue(file, usersData);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
