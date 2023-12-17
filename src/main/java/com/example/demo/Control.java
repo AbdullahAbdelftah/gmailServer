@@ -63,6 +63,7 @@ public class Control {
             try (FileWriter fileWriter = new FileWriter("usersData.json")) {
                 objectMapper.writeValue(fileWriter, usersData);
             }
+            System.out.println("write completed");
         } catch (IOException e) {
             e.printStackTrace();
         }
