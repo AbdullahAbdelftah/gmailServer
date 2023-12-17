@@ -3,7 +3,9 @@ package com.example.demo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -46,7 +48,7 @@ public class Control {
     public ArrayList<UserData> getUsersData() {
         try {
             System.out.println("read");
-            InputStream inputStream = new FileInputStream(jsonFilePath);
+            InputStream inputStream = new ClassPathResource("usersData.json").getInputStream();
             return objectMapper.readValue(inputStream, new TypeReference<ArrayList<UserData>>() {});
         } catch (IOException e) {
             e.printStackTrace();
@@ -57,9 +59,10 @@ public class Control {
     public void writeUsersData(ArrayList<UserData> usersData) {
         System.out.println("write started");
         try {
-            System.out.println(usersData);
-            objectMapper.writeValue(new File(jsonFilePath), usersData);
-        } catch (IOException e) {
+            // Note: This will overwrite the existing file with the updated data
+            FileCopyUtils.copy(objectMapper.writeValueAsBytes(usersData),
+                    new File(new ClassPathResource("usersData.json").getURL().toURI()));
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
