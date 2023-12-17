@@ -42,7 +42,9 @@ public class Control {
     }
 
     public ArrayList<UserData> getUsersData() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/usersData.json")) {
+        try {
+            System.out.println("read");
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(JSON_FILE_PATH);
             if (inputStream != null) {
                 return objectMapper.readValue(inputStream, new TypeReference<ArrayList<UserData>>() {});
             } else {
@@ -55,13 +57,12 @@ public class Control {
         }
     }
 
-
     public void writeUsersData(ArrayList<UserData> usersData) {
-        try (OutputStream outputStream = new FileOutputStream(new File(getClass().getResource("/usersData.json").getFile()))) {
-            objectMapper.writeValue(outputStream, usersData);
-            System.out.println("Data written to file successfully");
+        System.out.println("write started");
+        try {
+            // Note: This will write the file to the root of your project
+            objectMapper.writeValue(new File(JSON_FILE_PATH), usersData);
         } catch (IOException e) {
-            System.err.println("Error writing data to file: " + e.getMessage());
             e.printStackTrace();
         }
     }
