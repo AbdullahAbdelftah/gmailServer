@@ -57,13 +57,15 @@ public class Control {
 
 
     public void writeUsersData(ArrayList<UserData> usersData) {
-        System.out.println("d5lna write");
-        try (OutputStream outputStream = new FileOutputStream(new File(JSON_FILE_PATH))) {
+        try (OutputStream outputStream = new FileOutputStream(new File(getClass().getResource("/usersData.json").getFile()))) {
             objectMapper.writeValue(outputStream, usersData);
+            System.out.println("Data written to file successfully");
         } catch (IOException e) {
+            System.err.println("Error writing data to file: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     public UserData getUserByEmail(String email) {
         ArrayList<UserData> usersData = getUsersData();
