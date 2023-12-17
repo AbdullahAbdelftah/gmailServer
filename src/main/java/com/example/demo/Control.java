@@ -59,11 +59,11 @@ public class Control {
     public void writeUsersData(ArrayList<UserData> usersData) {
         System.out.println("write started");
         try {
-            System.out.println("mn el write   "+usersData);
-            // Note: This will overwrite the existing file with the updated data
-            FileCopyUtils.copy(objectMapper.writeValueAsBytes(usersData),
-                    new File(new ClassPathResource("usersData.json").getURL().toURI()));
-        } catch (IOException | URISyntaxException e) {
+            // Use a FileWriter to write the data to the file
+            try (FileWriter fileWriter = new FileWriter("usersData.json")) {
+                objectMapper.writeValue(fileWriter, usersData);
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
