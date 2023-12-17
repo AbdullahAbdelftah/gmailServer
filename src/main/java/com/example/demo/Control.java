@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -16,8 +17,8 @@ import java.util.Calendar;
 public class Control {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final String JSON_FILE_NAME = "usersData.json";
-    private static final String JSON_FILE_PATH = "/usersData.json";
+    @Value("${json.file.path}")
+    private String jsonFilePath;
 
     public ArrayList<UserData> usersData;
 
@@ -47,16 +48,9 @@ public class Control {
     public ArrayList<UserData> getUsersData() {
         try {
             System.out.println("read");
-            // Use the class loader to get the resource URL
-            URL resource = getClass().getClassLoader().getResource(JSON_FILE_NAME);
-            if (resource != null) {
-                File file = Paths.get(resource.toURI()).toFile();
-                return objectMapper.readValue(file, new TypeReference<ArrayList<UserData>>() {});
-            } else {
-                System.err.println("File not found in the classpath");
-                return null;
-            }
-        } catch (IOException | URISyntaxException e) {
+            File file = new File(jsonFilePath);
+            return objectMapper.readValue(file, new TypeReference<ArrayList<UserData>>() {});
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
@@ -66,16 +60,9 @@ public class Control {
         System.out.println("write started");
         try {
             System.out.println(usersData);
-            // Use the class loader to get the resource URL
-            URL resource = getClass().getClassLoader().getResource(JSON_FILE_NAME);
-            if (resource != null) {
-                File file = Paths.get(resource.toURI()).toFile();
-                // Note: This will write the file back to the classpath
-                objectMapper.writeValue(file, usersData);
-            } else {
-                System.err.println("File not found in the classpath");
-            }
-        } catch (IOException | URISyntaxException e) {
+            File file = new File(jsonFilePath);
+            objectMapper.writeValue(file, usersData);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
