@@ -202,10 +202,13 @@ public class UserData {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", gender='" + gender + '\'' +
+                ", contacts=" + contacts +
                 ", inbox=" + inbox +
                 ", sent=" + sent +
                 ", draft=" + draft +
                 ", trash=" + trash +
+                ", favourites=" + favourites +
+                ", folders=" + folders +
                 ", msgId=" + msgId +
                 '}';
     }

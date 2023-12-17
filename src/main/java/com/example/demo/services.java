@@ -145,7 +145,6 @@ public class services {
             ArrayList<UserData>usersData=userDataService.getUsersData();
             if(!user.equals(email) && !sender.getContacts().contains(email)) {
                 usersData.get(sender.getIndex()).getContacts().add(email);
-
                 userDataService.writeUsersData(usersData);
             }
             return new ResponseEntity<>("Mail sent successfully", HttpStatus.OK);
