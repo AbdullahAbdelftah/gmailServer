@@ -60,6 +60,7 @@ public class Control {
     public void writeUsersData(ArrayList<UserData> usersData) {
         System.out.println("write started");
         try {
+            System.out.println(usersData);
             // Note: This will write the file to the root of your project
             objectMapper.writeValue(new File(JSON_FILE_PATH), usersData);
         } catch (IOException e) {
