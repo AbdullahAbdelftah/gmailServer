@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "http://localhost:8081")
 public class services {
 
     @Autowired
