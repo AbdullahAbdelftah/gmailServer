@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -14,7 +15,7 @@ public class Control {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private static final String JSON_FILE_NAME = "usersData.json";
-    private static final String JSON_FILE_PATH = JSON_FILE_NAME;
+    private static final String JSON_FILE_PATH = "/usersData.json";
 
     public ArrayList<UserData> usersData;
 
@@ -44,7 +45,7 @@ public class Control {
     public ArrayList<UserData> getUsersData() {
         try {
             System.out.println("read");
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(JSON_FILE_PATH);
+            InputStream inputStream = getClass().getResourceAsStream(JSON_FILE_PATH);
             if (inputStream != null) {
                 return objectMapper.readValue(inputStream, new TypeReference<ArrayList<UserData>>() {});
             } else {
@@ -61,13 +62,12 @@ public class Control {
         System.out.println("write started");
         try {
             System.out.println(usersData);
-            // Note: This will write the file to the root of your project
-            objectMapper.writeValue(new File(JSON_FILE_PATH), usersData);
-        } catch (IOException e) {
+            // Note: This will write the file back to the classpath
+            objectMapper.writeValue(new File(getClass().getResource(JSON_FILE_PATH).toURI()), usersData);
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
-
 
     public UserData getUserByEmail(String email) {
         ArrayList<UserData> usersData = getUsersData();
